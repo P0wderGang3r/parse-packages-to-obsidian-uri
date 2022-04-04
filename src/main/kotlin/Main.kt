@@ -59,8 +59,12 @@ fun dependenciesProcession(inputString: String, fileWriter: FileWriter): Boolean
 
     return false
 }
+
+//Причина комментирования строки - слишком сильное влияние оказывает "приоритет" ПО.
+//Это происходит ввиду того, что практически все приложения в репе опциональны.
 fun writeTag(inputString: String, fileWriter: FileWriter): Boolean {
-    if (inputString != "" && inputString.split(": ")[0].equals("Section")) {
+    if (inputString != "" && inputString.split(": ")[0].equals("Section")
+        /*|| inputString != "" && inputString.split(": ")[0].equals("Priority") */) {
         val newString = inputString.split(": ")[1]
             fileWriter.write("#$newString\n")
         return true
