@@ -4,6 +4,18 @@ import java.io.FileWriter
 
 val fileRegistry: ArrayList<String> = ArrayList()
 
+
+fun writeText(inputString: String, fileWriter: FileWriter): Boolean {
+    if (inputString != "") {
+        val newString = inputString.split(": ")[1]
+        fileWriter.write("$newString\n")
+
+        return true
+    }
+
+    return false
+}
+
 fun dependencyToURI(inputString: String, fileWriter: FileWriter): Boolean {
     val dependenciesList = inputString.split(" , ", ", ", ",")
 
@@ -47,12 +59,10 @@ fun dependenciesProcession(inputString: String, fileWriter: FileWriter): Boolean
 
     return false
 }
-
-fun writeText(inputString: String, fileWriter: FileWriter): Boolean {
-    if (inputString != "") {
+fun writeTag(inputString: String, fileWriter: FileWriter): Boolean {
+    if (inputString != "" && inputString.split(": ")[0].equals("Section")) {
         val newString = inputString.split(": ")[1]
-        fileWriter.write("$newString\n")
-
+            fileWriter.write("#$newString\n")
         return true
     }
 
@@ -119,15 +129,27 @@ fun createFiles(input_path: String, output_path: String): Boolean {
 
             do {
                 writeCategory(inputString[currIndex], fileWriter)
+
                 fixIndex = descriptionFix(inputString, currIndex, fileWriter)
                 if (fixIndex != currIndex) {
                     currIndex = fixIndex
                     continue
                 }
-                if (!dependenciesProcession(inputString[currIndex], fileWriter))
-                    writeText(inputString[currIndex], fileWriter)
-                
+
+                if (writeTag(inputString[currIndex], fileWriter)) {
+                    currIndex++
+                    continue
+                }
+
+                if (dependenciesProcession(inputString[currIndex], fileWriter)) {
+
+                    currIndex++
+                    continue
+                }
+
+                writeText(inputString[currIndex], fileWriter)
                 currIndex++
+
             } while (currIndex < inputString.size && inputString[currIndex].split(": ")[0] != "Package")
 
             fileWriter.close()
