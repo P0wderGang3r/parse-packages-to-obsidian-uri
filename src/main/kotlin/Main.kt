@@ -17,7 +17,7 @@ fun writeText(inputString: String, fileWriter: FileWriter): Boolean {
 }
 
 fun dependencyToURI(inputString: String, fileWriter: FileWriter): Boolean {
-    val dependenciesList = inputString.split(" , ", ", ", ",")
+    val dependenciesList = inputString.split(" , ", ", ", ",", " | ")
 
     for (dependency in dependenciesList) {
         if (!dependency.equals(dependenciesList[dependenciesList.size - 1]))
